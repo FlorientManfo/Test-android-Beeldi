@@ -9,6 +9,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 
 class BeeldingRepositoryImplementation: BeeldingRepository {
@@ -52,7 +53,43 @@ class BeeldingRepositoryImplementation: BeeldingRepository {
         )
     }
 
-    override suspend fun getCheckpoints(equipmentKey: String, callback: (Resource<List<Checkpoint>>) -> Unit) {
+    override suspend fun getEquipmentByKey(
+        equipmentKey: String,
+        callback: (Resource<Equipment>) -> Unit
+    ) {
+        equipmentsReference.addListenerForSingleValueEvent(
+            object: ValueEventListener {
+                lateinit var equipment: Equipment
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val resource:Resource<Equipment> = try{
+                        for(ds in snapshot.children){
+                            if (ds.key == equipmentKey){
+                                ds.getValue(Equipment::class.java)?.let {
+                                    equipment = it
+                                }
+                            }
+                        }
+                        Resource.Success(
+                            data = equipment
+                        )
+                    } catch (e: Exception){
+                        e.printStackTrace()
+                        Log.e(TAG, "${e.message} ${snapshot.toString()}")
+                        Resource.Error(e.message?:"An unknown error occurred.")
+                    }
+                    callback(resource)
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d(TAG, error.message)
+                    val resource = Resource.Error<Equipment>(error.message)
+                    callback(resource)
+                }
+            }
+        )
+    }
+
+    override suspend fun getCheckpoints(equipmentKey: String,
+                                        callback: (Resource<List<Checkpoint>>) -> Unit) {
         checkpointsReference.addListenerForSingleValueEvent(
             object: ValueEventListener {
                 val checkpoints = mutableListOf<Checkpoint>()
