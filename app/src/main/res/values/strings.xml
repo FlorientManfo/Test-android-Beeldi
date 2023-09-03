@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Beelding</string>
+    <string name="equipment_image_desc">Equipment photo</string>
+    <string name="error_icon_desc">Error</string>
 </resources>

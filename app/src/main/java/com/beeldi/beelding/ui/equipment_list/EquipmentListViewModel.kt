@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.beeldi.beelding.BeeldingApp
 import com.beeldi.beelding.domain.model.Equipment
 import com.beeldi.beelding.domain.repository.BeeldingRepository
+import com.beeldi.beelding.domain.use_case.FilterEquipmentListUseCase
 import com.beeldi.beelding.domain.utils.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,8 +25,13 @@ class EquipmentListViewModel(
 ): ViewModel(){
 
     private val TAG = "ListViewModel"
-    private val _state = MutableStateFlow(EquipmentListState())
+    private val _state = MutableStateFlow(emptyList<Equipment>())
     var state = _state.asStateFlow()
+        private set
+
+    var uiState: EquipmentListUiState by mutableStateOf(
+        EquipmentListUiState.Loading
+    )
         private set
 
     init {
@@ -36,21 +42,44 @@ class EquipmentListViewModel(
         viewModelScope.launch {
             repository.getEquipments { resource ->
                 try{
-                    when (resource) {
+                   uiState =  when (resource) {
                         is Resource.Error ->{
-
+                            EquipmentListUiState.Error("An unexpected error occurred during loading of equipments ")
                         }
                         is Resource.Success -> {
+                            val fuc = FilterEquipmentListUseCase()
                             _state.update {
-                                it.copy(
-                                    allEquipments = resource.data?: emptyList()
-                                )
+                                fuc.invoke(resource.data?: emptyList(), "")
                             }
+                            EquipmentListUiState.Complete
                         }
                     }
                 } catch (e: Exception){
                     Log.e(TAG, e.message?: "An error occurred while updating state")
                 }
+            }
+        }
+    }
+
+    fun onEvent(event: EquipmentListEvent) {
+        when(event){
+            is EquipmentListEvent.OnEquipmentClicked ->{
+                TODO()
+            }
+            is EquipmentListEvent.OnSearchKeywordChange ->{
+                uiState = EquipmentListUiState.Loading
+                if(event.keyword.isNotEmpty()){
+                    val fuc = FilterEquipmentListUseCase()
+                    _state.update {
+                        fuc.invoke(_state.value, event.keyword)
+                    }
+                    uiState = EquipmentListUiState.Complete
+                }else{
+                    getAllEquipments()
+                }
+            }
+            is EquipmentListEvent.ActivateSearch ->{
+                getAllEquipments()
             }
         }
     }

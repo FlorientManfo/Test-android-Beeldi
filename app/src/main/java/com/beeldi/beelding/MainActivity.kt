@@ -14,24 +14,53 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.beeldi.beelding.ui.equipment_list.EquipmentListViewModel
 import com.beeldi.beelding.ui.theme.BeeldingTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
-
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.beeldi.beelding.ui.equipment_detail.EquipmentDetailView
+import com.beeldi.beelding.ui.equipment_list.EquipmentListView
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val viewModel: EquipmentListViewModel = viewModel(
-                factory = EquipmentListViewModel.Factory
-            )
-            val state = viewModel.state.collectAsState()
             BeeldingTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting(state.value.allEquipments.size.toString())
+                    BeeldingNavHost()
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun BeeldingNavHost(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
+    startDestination: String = "equipment_list"
+){
+    NavHost(
+        navController = navController,
+        startDestination = startDestination,
+        modifier = modifier.fillMaxSize()
+    ) {
+        composable("equipment_list") {
+            EquipmentListView(){equipmentKey ->  }
+        }
+        composable(
+            route = "equipment_detail/{key}",
+            arguments = listOf(navArgument("key") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val equipmentKey = backStackEntry.arguments?.getString("key") ?: ""
+            EquipmentDetailView(equipmentKey = equipmentKey){
+                navController.popBackStack()
             }
         }
     }

@@ -3,7 +3,7 @@ package com.beeldi.beelding.domain.use_case
 import com.beeldi.beelding.domain.model.Equipment
 import kotlin.math.max
 
-class FilterEquipmentLisUseCase {
+class FilterEquipmentListUseCase {
     operator fun invoke(
         equipmentByCheckpoint: List<Equipment>,
         keyword: String
@@ -22,12 +22,12 @@ class FilterEquipmentLisUseCase {
         }
 
         return when (max(nameMatchingCount, domainMatchingCount)){
-            domainMatchingCount -> equipmentByCheckpoint
-                .filter { it.domain.lowercase().contains(keyword.lowercase()) }
-                .sortedBy { it.domain }
-            else -> equipmentByCheckpoint
+            nameMatchingCount -> equipmentByCheckpoint
                 .filter { it.name.lowercase().contains(keyword.lowercase()) }
-                .sortedBy { it.name }
+                .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
+            else -> equipmentByCheckpoint
+                    .filter { it.domain.lowercase().contains(keyword.lowercase()) }
+                    .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.domain })
         }
     }
 }
