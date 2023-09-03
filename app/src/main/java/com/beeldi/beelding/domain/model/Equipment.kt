@@ -9,11 +9,11 @@ data class Equipment(
     @PropertyName("local") val local: String,
     @PropertyName("model") val model: String,
     @PropertyName("name") val name: String,
-    @PropertyName("nbFaults") val nbFaults: Int,
+    @PropertyName("nbFaults") val nbFaults: Any,
     @PropertyName("niveau") val level: String,
     @PropertyName("notes") val notes: String,
     @PropertyName("photo") val photo: String,
-    @PropertyName("quantity") val quantity: Int,
+    @PropertyName("quantity") val quantity: Any,
     @PropertyName("serialNumber") val serialNumber: String,
     @PropertyName("status") val status: String,
 ){
