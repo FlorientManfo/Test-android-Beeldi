@@ -1,4 +1,4 @@
-package com.beeldi.beelding.ui.equipment_detail
+package com.beeldi.beelding.ui.equipment_list
 
 sealed interface EquipmentListEvent{
     data class OnEquipmentClicked(val equipmentId: Int)
