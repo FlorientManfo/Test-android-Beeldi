@@ -17,6 +17,7 @@ data class Equipment(
     @PropertyName("serialNumber") val serialNumber: String,
     @PropertyName("status") val status: String,
 ){
+    var equipmentKey: String = ""
     constructor():this(
         "",
         "",

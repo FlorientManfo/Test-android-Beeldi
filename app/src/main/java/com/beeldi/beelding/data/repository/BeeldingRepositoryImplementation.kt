@@ -24,7 +24,12 @@ class BeeldingRepositoryImplementation: BeeldingRepository {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val resource: Resource<List<Equipment>> = try{
                         for(ds in snapshot.children){
-                            ds.getValue(Equipment::class.java)?.let { equipments.add(it) }
+                            ds.getValue(Equipment::class.java)?.let {
+                                ds.key?.let{
+                                    key ->  it.equipmentKey = key
+                                }
+                                equipments.add(it)
+                            }
                         }
                         Resource.Success(
                             data = equipments
@@ -47,14 +52,18 @@ class BeeldingRepositoryImplementation: BeeldingRepository {
         )
     }
 
-    override suspend fun getCheckpoints(callback: (Resource<List<Checkpoint>>) -> Unit) {
+    override suspend fun getCheckpoints(equipmentKey: String, callback: (Resource<List<Checkpoint>>) -> Unit) {
         checkpointsReference.addListenerForSingleValueEvent(
             object: ValueEventListener {
                 val checkpoints = mutableListOf<Checkpoint>()
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val resource:Resource<List<Checkpoint>> = try{
                         for(ds in snapshot.children){
-                            ds.getValue(Checkpoint::class.java)?.let { checkpoints.add(it) }
+                            ds.getValue(Checkpoint::class.java)?.let {
+                                if(it.equipmentKey == equipmentKey){
+                                    checkpoints.add(it)
+                                }
+                            }
                         }
                         Resource.Success(
                             data = checkpoints

@@ -5,5 +5,5 @@ import com.beeldi.beelding.domain.utils.Resource
 
 interface BeeldingRepository {
     suspend fun getEquipments(callback: (Resource<List<Equipment>>) -> Unit)
-    suspend fun getCheckpoints(callback: (Resource<List<Checkpoint>>) -> Unit)
+    suspend fun getCheckpoints(equipmentKey: String, callback: (Resource<List<Checkpoint>>) -> Unit)
 }
