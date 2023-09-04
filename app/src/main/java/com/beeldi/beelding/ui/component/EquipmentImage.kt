@@ -1,6 +1,7 @@
 package com.beeldi.beelding.ui.component
 
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -21,7 +22,7 @@ fun EquipmentImage(
             .crossfade(true)
             .build(),
         contentDescription = stringResource(id = R.string.equipment_image_desc),
-        contentScale = ContentScale.Crop,
-        modifier = modifier.fillMaxHeight()
+        contentScale = ContentScale.FillBounds,
+        modifier = modifier.fillMaxSize()
     )
 }

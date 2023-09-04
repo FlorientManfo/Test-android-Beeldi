@@ -5,22 +5,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.beeldi.beelding.BeeldingApp
 import com.beeldi.beelding.domain.model.Equipment
 import com.beeldi.beelding.domain.repository.BeeldingRepository
 import com.beeldi.beelding.domain.use_case.FilterEquipmentListUseCase
 import com.beeldi.beelding.domain.utils.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class EquipmentListViewModel(
+@HiltViewModel
+class EquipmentListViewModel @Inject constructor(
     private val repository: BeeldingRepository
 ): ViewModel(){
 
@@ -80,21 +78,6 @@ class EquipmentListViewModel(
             }
             is EquipmentListEvent.ActivateSearch ->{
                 getAllEquipments()
-            }
-        }
-    }
-
-    /*This companion object provide us the possibility to ge and instance of
-    * repository that will be injected inside the view-model and will
-    * be available during the hole live of our application*/
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = this[APPLICATION_KEY] as BeeldingApp
-                val repository = application.container.repository
-                EquipmentListViewModel(
-                    repository = repository,
-                )
             }
         }
     }

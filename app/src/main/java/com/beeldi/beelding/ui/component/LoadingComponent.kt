@@ -2,7 +2,9 @@ package com.beeldi.beelding.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,29 +29,34 @@ fun LoadingComponent(
     modifier: Modifier = Modifier,
     message: String
 ){
-    Card(
-        shape = MaterialTheme.shapes.medium,
-        modifier = modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(dimensionResource(id = R.dimen.medium_space))
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.medium_space)),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
+        Card(
+            shape = MaterialTheme.shapes.medium,
+            modifier = modifier
                 .fillMaxWidth()
+                .wrapContentHeight()
                 .padding(dimensionResource(id = R.dimen.medium_space))
         ) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(dimensionResource(id = R.dimen.medium_size)),
-                color = MaterialTheme.colorScheme.primary
-            )
-            Text(
-                text = "Loading ${message}...",
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.medium_space)),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(id = R.dimen.medium_space))
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(dimensionResource(id = R.dimen.medium_size)),
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = "Loading ${message}...",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }

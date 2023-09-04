@@ -2,7 +2,9 @@ package com.beeldi.beelding.ui.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,31 +31,36 @@ fun ErrorComponent(
     message: String,
     modifier: Modifier = Modifier
 ){
-    Card(
-        shape = MaterialTheme.shapes.medium,
-        modifier = modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(dimensionResource(id = R.dimen.medium_space))
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.medium_space)),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ){
+        Card(
+            shape = MaterialTheme.shapes.medium,
+            modifier = modifier
                 .fillMaxWidth()
+                .wrapContentHeight()
                 .padding(dimensionResource(id = R.dimen.medium_space))
         ) {
-            Icon(
-                imageVector = Icons.Filled.Close,
-                contentDescription = stringResource(id = R.string.error_icon_desc),
-                tint = Color.Red,
-                modifier = Modifier.size(dimensionResource(id = R.dimen.medium_size)),
-            )
-            Text(
-                text = message,
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.medium_space)),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(id = R.dimen.medium_space))
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = stringResource(id = R.string.error_icon_desc),
+                    tint = Color.Red,
+                    modifier = Modifier.size(dimensionResource(id = R.dimen.medium_size)),
+                )
+                Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }
