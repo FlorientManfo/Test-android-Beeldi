@@ -24,7 +24,7 @@ fun InfoSection(
 ){
     Card(
         shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(dimensionResource(id = R.dimen.medium_space)),
+        elevation = CardDefaults.cardElevation(dimensionResource(id = R.dimen.small_space)),
         modifier = modifier.padding(dimensionResource(id = R.dimen.small_space))
     ) {
         Column(
